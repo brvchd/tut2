@@ -17,12 +17,12 @@ namespace tut2
             var FileWriter = new FileStream("results.xml", FileMode.Create);
             var LogWriter = new FileStream("log.txt", FileMode.Create);
 
-            if (args.Length == 3) 
-            { 
+            if (args.Length == 3)
+            {
                 if (args[0] != null) { path = args[0]; }
-                if (args[1] != null){ FileWriter = new FileStream(args[1], FileMode.Create); }
+                if (args[1] != null) { FileWriter = new FileStream(args[1], FileMode.Create); }
             }
-            
+
             using (var writer = new StreamWriter(LogWriter))
                 try
                 {
@@ -54,16 +54,16 @@ namespace tut2
                             Students = students
                         };
 
-                        if (args.Length == 3 && args[2].ToLower().Equals("json") )
+                        if (args.Length != 3 || !args[2].ToLower().Equals("json"))
+                        {
+                            var serializer = new XmlSerializer(typeof(University));
+                            serializer.Serialize(FileWriter, uni);
+                        }
+                        else
                         {
                             var UniWrapper = new UniversityWrapper { University = uni };
                             var jsonString = JsonSerializer.Serialize(UniWrapper);
                             File.WriteAllText("data.json", jsonString);
-                        }
-                        else
-                        { 
-                            var serializer = new XmlSerializer(typeof(University));
-                            serializer.Serialize(FileWriter, uni);
                         }
 
                     }
